@@ -100,3 +100,13 @@ For Intel Iris integrated graphics, start with **Smooth + 60 FPS**, 60% resoluti
 Static stadium meshes are batched by material. Bloom/exposure and reflective paint were reduced to retain the car's color and silhouette. Rendering is paced independently of the 120 Hz simulation, and local catch-up now handles up to 150 ms instead of slowing the simulation at every frame over 50 ms. Camera and vehicle smoothing are more responsive. Long stalls still require dropping elapsed time to avoid unbounded catch-up.
 
 Quiet original procedural electronic racing music plays during active matches, with separate volume from engine and effects. Contact-force events drive crash feedback; Rapier continues to compute collision impulses and vehicle recoil. No copyrighted Rocket League music or car assets are included. Exact Rocket League physics, production art and client prediction remain out of scope for this revision.
+
+## Teams, bots and recovery
+
+Choose **1v1, 2v2 or 3v3** before hosting. Seats alternate Blue/Orange, so four humans fill a 2v2 room and six fill a 3v3 room. A full room starts automatically. The host can also choose **Start with bots** when the number of empty seats is within the selected bot limit (0–5). Slots and teams are server controlled, and late joins are rejected once a match starts. A disconnect currently ends the room; reconnect and mid-match replacement remain follow-up work.
+
+Practice supports **0–5 bots** plus the player. Selecting 2v2 presets three bots; 3v3 presets five. The bot selector can also create asymmetric practice games. Teammate bots select striker/support roles according to distance to the ball.
+
+**Reset Car** on the HUD or **R** requests a reset to your team's half with zero velocity, cleared forces and a reset jump state. It works for upright cars stuck against scenery as well as flipped cars. A three-second server-enforced cooldown prevents repeated resets. Safe spawn candidates avoid the ball and other vehicles; the match score, timer and boost reserve are preserved.
+
+This revision uses a lower GT coupe silhouette, integrated rear lip, less reflective glass, muted automotive colors and subtler turf contrast. The models remain original procedural assets, not photoreal scanned cars. Car-to-car crash rotation is briefly preserved instead of being overwritten immediately by steering correction. Floor/ramp contacts retain steering support. Exact Rocket League handling is not claimed.
