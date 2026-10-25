@@ -136,3 +136,10 @@ Phones first receive a lightweight launch screen. Tap **Play Pocket League** to 
 ### Mobile driving
 
 Auto-acceleration is enabled by default and saved under Settings → Phone controls. Wheel, joystick, arrows and tilt now steer only. One right-side drive pad replaces the separate gas and brake buttons: upper area accelerates, center coasts, lower area brakes/reverses. With auto on, releasing the pad resumes acceleration; with auto off, releasing coasts. Jump, boost and slide remain independent and support simultaneous touch input. Auto driving is limited to active landscape touch gameplay and does not change keyboard controls.
+
+
+### Installed app launch and high-refresh targets
+
+The home screen is now rendered in HTML before JavaScript, WebGL or WASM loads. App installs use standalone display mode with a stable app ID and explicit launch URL; fullscreen is requested during play. The lightweight launcher checks for service-worker updates and offers Update & Reopen only before starting the game. Repair App clears Pocket League caches and loads a fresh URL. A phone shortcut that launches no window at all cannot run this recovery code: remove that installed shortcut and reinstall from the live browser page after deployment. This is distinct from a blank page or a graphics crash.
+
+Frame-rate settings include 30, 45, 60, 90, 120 and Unlimited independently of quality. High-refresh targets are saved; actual frame delivery depends on the display, browser refresh scheduling, power mode and GPU workload.
