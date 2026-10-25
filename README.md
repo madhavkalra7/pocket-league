@@ -90,3 +90,13 @@ docs/         Reference measurements and known limits
 ```
 
 The initial bundle includes Rapier's WebAssembly through its compatibility package and is comparatively large. Production art, asset compression, adaptive quality and network prediction are follow-up work. Procedural cars and stadium assets are original placeholders for a later detailed asset pass; exact Rocket League graphics or handling are not claimed.
+
+## Graphics and frame pacing update
+
+Open **Settings** from the menu or in a match. Presets: **Smooth, Balanced, HD, HDR, Ultra**. Frame targets are independent: **30, 45, 60, 90, 120 FPS or Unlimited**. Resolution (50–150%), shadows, bloom, crowd, adaptive resolution, music/effects volume and an FPS counter can be changed and persist locally.
+
+For Intel Iris integrated graphics, start with **Smooth + 60 FPS**, 60% resolution, shadows/bloom/crowd off, and adaptive resolution on. This is a target, not a verified hardware guarantee. Adaptive resolution lowers resolution when measured rendered FPS is below the selected target, down to 50%; higher FPS also requires a compatible display and enough CPU/GPU capacity. The counter measures delivered animation-frame draws, not GPU timing.
+
+Static stadium meshes are batched by material. Bloom/exposure and reflective paint were reduced to retain the car's color and silhouette. Rendering is paced independently of the 120 Hz simulation, and local catch-up now handles up to 150 ms instead of slowing the simulation at every frame over 50 ms. Camera and vehicle smoothing are more responsive. Long stalls still require dropping elapsed time to avoid unbounded catch-up.
+
+Quiet original procedural electronic racing music plays during active matches, with separate volume from engine and effects. Contact-force events drive crash feedback; Rapier continues to compute collision impulses and vehicle recoil. No copyrighted Rocket League music or car assets are included. Exact Rocket League physics, production art and client prediction remain out of scope for this revision.
