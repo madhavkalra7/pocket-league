@@ -122,3 +122,9 @@ Tilt requires a compatible orientation sensor and HTTPS (or localhost). Tap **En
 The production build generates a versioned service worker and installable manifest with PNG icons. Eligible browsers show an install promotion; its Install button opens the browser's confirmation. iPhone users receive **Share → Add to Home Screen** instructions instead of a nonexistent one-click API. A **Fullscreen** button requests fullscreen and landscape locking when supported; browser/OS restrictions may reject either. The app also works in a normal browser tab.
 
 After one successful online load/cache installation, **practice works offline**. Online rooms always need the match server. Service worker updates wait for the old app to close and do not force-reload a live match. Installation and production service workers require HTTPS outside localhost. Hosting must serve `manifest.webmanifest`, `/icons/` and `/sw.js` from the app origin; the supplied Node server does this.
+
+### Installed-app launch recovery
+
+Navigation now serves the HTML cached by the active worker alongside that worker's matching hashed assets. This avoids combining a newly deployed page with an older installed asset set. Updates activate after the previous app closes.
+
+The initial HTML also contains an independent startup recovery screen. If the main script fails to load or the game never becomes ready, **Repair cached game and reload** unregisters workers and clears only Pocket League caches, preserving local control/settings preferences. Repair requires an internet connection. This cannot fix a broken OS shortcut that never launches a browser window; reopen the live website and reinstall that shortcut if necessary.
