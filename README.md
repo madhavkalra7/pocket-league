@@ -110,3 +110,15 @@ Practice supports **0–5 bots** plus the player. Selecting 2v2 presets three bo
 **Reset Car** on the HUD or **R** requests a reset to your team's half with zero velocity, cleared forces and a reset jump state. It works for upright cars stuck against scenery as well as flipped cars. A three-second server-enforced cooldown prevents repeated resets. Safe spawn candidates avoid the ball and other vehicles; the match score, timer and boost reserve are preserved.
 
 This revision uses a lower GT coupe silhouette, integrated rear lip, less reflective glass, muted automotive colors and subtler turf contrast. The models remain original procedural assets, not photoreal scanned cars. Car-to-car crash rotation is briefly preserved instead of being overwritten immediately by steering correction. Floor/ramp contacts retain steering support. Exact Rocket League handling is not claimed.
+
+## Mobile controls, fullscreen and installation
+
+Phone UI uses dynamic viewport sizing, notch/home-indicator safe areas and a compact landscape HUD. Portrait gameplay shows rotation guidance and releases driving input; practice simulation pauses until landscape is restored. Menus and settings remain scrollable on short screens.
+
+In **Settings → Phone controls**, choose **steering wheel**, **joystick**, **directional buttons** or **phone tilt**. Wheel and tilt use separate gas/brake pedals; the joystick controls both throttle and steering. **Jump, boost and slide remain independent multi-touch buttons**. Size and opacity are adjustable. Touches are cancelled on blur, resize and pointer cancellation to avoid stuck inputs.
+
+Tilt requires a compatible orientation sensor and HTTPS (or localhost). Tap **Enable Tilt**, grant sensor permission if requested, then **Center Tilt** while holding the phone normally. Both landscape directions are mapped. If permission is denied or sensor data never arrives, steering arrows remain available. Simulated sensor tests do not replace testing real iOS/Android hardware.
+
+The production build generates a versioned service worker and installable manifest with PNG icons. Eligible browsers show an install promotion; its Install button opens the browser's confirmation. iPhone users receive **Share → Add to Home Screen** instructions instead of a nonexistent one-click API. A **Fullscreen** button requests fullscreen and landscape locking when supported; browser/OS restrictions may reject either. The app also works in a normal browser tab.
+
+After one successful online load/cache installation, **practice works offline**. Online rooms always need the match server. Service worker updates wait for the old app to close and do not force-reload a live match. Installation and production service workers require HTTPS outside localhost. Hosting must serve `manifest.webmanifest`, `/icons/` and `/sw.js` from the app origin; the supplied Node server does this.
