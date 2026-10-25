@@ -132,3 +132,7 @@ The initial HTML also contains an independent startup recovery screen. If the ma
 ### Low-memory phone launch
 
 Phones first receive a lightweight launch screen. Tap **Play Pocket League** to load the 3D game. Mobile launch selects Smooth settings before allocating WebGL resources; shadows, multisample antialiasing, reflection-map generation and post-processing render targets are omitted at low quality. Bloom buffers are created only when requested. A graphics-context loss stops input and exposes the recovery screen. These changes reduce startup memory, but a real-device crash still requires the live deployment URL and device/browser details to reproduce conclusively.
+
+### Mobile driving
+
+Auto-acceleration is enabled by default and saved under Settings → Phone controls. Wheel, joystick, arrows and tilt now steer only. One right-side drive pad replaces the separate gas and brake buttons: upper area accelerates, center coasts, lower area brakes/reverses. With auto on, releasing the pad resumes acceleration; with auto off, releasing coasts. Jump, boost and slide remain independent and support simultaneous touch input. Auto driving is limited to active landscape touch gameplay and does not change keyboard controls.

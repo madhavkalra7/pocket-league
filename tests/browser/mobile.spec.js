@@ -8,3 +8,25 @@ test('denied tilt permission keeps directional fallback usable',async({page})=>{
 test('production PWA has icons, offline practice shell and no forced install prompt',async({page,context})=>{await page.goto('http://127.0.0.1:3002/');await expect(page.locator('#startMobileGame')).toBeVisible();await page.locator('#startMobileGame').click();await expect(page.locator('#practice')).toBeEnabled({timeout:25000});const manifest=await page.evaluate(async()=>await(await fetch('/manifest.webmanifest')).json());expect(manifest.orientation).toBe('landscape');expect(manifest.display).toBe('fullscreen');await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await expect(page.locator('#startMobileGame')).toBeVisible();await page.locator('#startMobileGame').click();await expect(page.locator('#practice')).toBeEnabled({timeout:25000});await context.setOffline(true);await page.reload();await expect(page.locator('#startMobileGame')).toBeVisible();await page.locator('#startMobileGame').click();await expect(page.locator('#practice')).toBeEnabled({timeout:25000});await page.locator('#practice').click();await expect(page.locator('#hud')).toBeVisible();await context.setOffline(false);});
 
 test('startup failure exposes a repair screen and repair can reload the game',async({browser})=>{const context=await browser.newContext({serviceWorkers:'block'}),page=await context.newPage();try{await page.route('**/assets/*.js',route=>route.abort());await page.goto('http://127.0.0.1:3002/');await expect(page.locator('#launchRecovery')).toBeVisible({timeout:30000});await page.unroute('**/assets/*.js');await page.locator('#repairLaunch').click();await expect(page.locator('#startMobileGame')).toBeVisible();await page.locator('#startMobileGame').click();await expect(page.locator('#practice')).toBeEnabled({timeout:25000});}finally{await context.close();}});
+
+test('auto acceleration and one right-side pedal work across all four steering layouts',async({page})=>{
+ await ready(page);await page.locator('#practice').click();
+ for(const mode of ['wheel','joystick','buttons','tilt']){
+  await layout(page,mode);
+  await expect.poll(()=>page.evaluate(()=>window.__pocket.controls.throttle)).toBe(1);
+  const pedal=page.locator('#drivePedal'),r=await pedal.boundingBox();
+  expect(r.x).toBeGreaterThan(400);
+  await page.mouse.move(r.x+r.width/2,r.y+r.height-2);await page.mouse.down();
+  await expect.poll(()=>page.evaluate(()=>window.__pocket.controls.throttle)).toBeLessThan(-.8);
+  await page.mouse.up();await expect.poll(()=>page.evaluate(()=>window.__pocket.controls.throttle)).toBe(1);
+ }
+ await page.getByRole('button',{name:'SETTINGS',exact:true}).filter({visible:true}).first().click();
+ await page.locator('[data-setting="autoAccelerate"]').uncheck();await page.locator('#closeSettings').click();
+ await expect.poll(()=>page.evaluate(()=>window.__pocket.controls.throttle)).toBe(0);
+ const r=await page.locator('#drivePedal').boundingBox();
+ await page.mouse.move(r.x+r.width/2,r.y+2);await page.mouse.down();await expect.poll(()=>page.evaluate(()=>window.__pocket.controls.throttle)).toBeGreaterThan(.8);
+ await page.mouse.move(r.x+r.width/2,r.y+r.height/2);await expect.poll(()=>page.evaluate(()=>window.__pocket.controls.throttle)).toBe(0);
+ await page.mouse.move(r.x+r.width/2,r.y+r.height-2);await expect.poll(()=>page.evaluate(()=>window.__pocket.controls.throttle)).toBeLessThan(-.8);
+ await page.mouse.up();await expect.poll(()=>page.evaluate(()=>window.__pocket.controls.throttle)).toBe(0);
+ expect(await page.evaluate(()=>JSON.parse(localStorage.getItem('pocket-settings-v3')).autoAccelerate)).toBe(false);
+});
