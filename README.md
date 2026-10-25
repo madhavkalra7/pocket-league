@@ -128,3 +128,7 @@ After one successful online load/cache installation, **practice works offline**.
 Navigation now serves the HTML cached by the active worker alongside that worker's matching hashed assets. This avoids combining a newly deployed page with an older installed asset set. Updates activate after the previous app closes.
 
 The initial HTML also contains an independent startup recovery screen. If the main script fails to load or the game never becomes ready, **Repair cached game and reload** unregisters workers and clears only Pocket League caches, preserving local control/settings preferences. Repair requires an internet connection. This cannot fix a broken OS shortcut that never launches a browser window; reopen the live website and reinstall that shortcut if necessary.
+
+### Low-memory phone launch
+
+Phones first receive a lightweight launch screen. Tap **Play Pocket League** to load the 3D game. Mobile launch selects Smooth settings before allocating WebGL resources; shadows, multisample antialiasing, reflection-map generation and post-processing render targets are omitted at low quality. Bloom buffers are created only when requested. A graphics-context loss stops input and exposes the recovery screen. These changes reduce startup memory, but a real-device crash still requires the live deployment URL and device/browser details to reproduce conclusively.

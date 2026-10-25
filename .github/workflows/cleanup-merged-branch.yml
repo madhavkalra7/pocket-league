@@ -1,0 +1,31 @@
+name: Remove merged prototype branch
+on:
+  push:
+    branches: [main]
+    paths: [.github/workflows/cleanup-merged-branch.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify merged PR and delete its unchanged prototype branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          node --input-type=module <<'JS'
+          const base='https://api.github.com/repos/'+process.env.REPO;
+          const headers={Authorization:'Bearer '+process.env.GH_TOKEN,Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'};
+          const pr=await fetch(base+'/pulls/1',{headers});
+          if(!pr.ok||!(await pr.json()).merged)throw Error('PR #1 is not verified merged');
+          const url=base+'/git/refs/heads/game/spline-free-v2';
+          const ref=await fetch(url,{headers});
+          if(ref.status===404){console.log('Branch is already absent');process.exit(0);}
+          if(!ref.ok||(await ref.json()).object.sha!=='5008c57d755b65cb13c55632349a588008487ccb')throw Error('Branch changed; refusing deletion');
+          const result=await fetch(url,{method:'DELETE',headers});
+          if(result.status!==204)throw Error('Delete failed: '+result.status);
+          console.log('Deleted game/spline-free-v2');
+          JS
