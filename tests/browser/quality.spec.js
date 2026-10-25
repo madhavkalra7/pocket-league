@@ -1,0 +1,8 @@
+import {test,expect} from '@playwright/test';
+test('audio produces a live signal and HD creates reflections and full-resolution MSAA',async({page})=>{
+ await page.goto('/');await expect(page.locator('#practice')).toBeEnabled({timeout:25000});await page.locator('#practice').click();
+ await expect.poll(()=>page.evaluate(()=>window.__pocket.audio.ctx?.state)).toBe('running');
+ await expect.poll(()=>page.evaluate(()=>window.__pocket.snapshot.phase)).toBe('playing');const signal=await page.evaluate(async()=>{const a=window.__pocket.audio,node=a.ctx.createAnalyser();node.fftSize=2048;a.master.connect(node);a.update(10,true);await new Promise(r=>setTimeout(r,250));const data=new Float32Array(node.fftSize);node.getFloatTimeDomainData(data);a.master.disconnect(node);return Math.max(...data.map(Math.abs));});expect(signal).toBeGreaterThan(.001);
+ await page.getByRole('button',{name:'SETTINGS',exact:true}).filter({visible:true}).first().click();await page.locator('#gfxPreset').selectOption('hd');await expect(page.locator('[data-setting="adaptive"]')).not.toBeChecked();await page.locator('#closeSettings').click();
+ const quality=await page.evaluate(()=>{const r=window.__pocket.renderer;return {environment:!!r.scene.environment,scale:r.renderScale,samples:r.composer.renderTarget1.samples,shadows:r.sun.shadow.mapSize.x};});expect(quality.environment).toBe(true);expect(quality.scale).toBe(1);expect(quality.samples).toBeGreaterThan(0);expect(quality.shadows).toBe(2048);await expect.poll(()=>page.evaluate(()=>document.getElementById('game').width)).toBeGreaterThan(900);await page.screenshot({path:'test-results/hd-quality.png'});
+});

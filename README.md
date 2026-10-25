@@ -143,3 +143,10 @@ Auto-acceleration is enabled by default and saved under Settings → Phone contr
 The home screen is now rendered in HTML before JavaScript, WebGL or WASM loads. App installs use standalone display mode with a stable app ID and explicit launch URL; fullscreen is requested during play. The lightweight launcher checks for service-worker updates and offers Update & Reopen only before starting the game. Repair App clears Pocket League caches and loads a fresh URL. A phone shortcut that launches no window at all cannot run this recovery code: remove that installed shortcut and reinstall from the live browser page after deployment. This is distinct from a blank page or a graphics crash.
 
 Frame-rate settings include 30, 45, 60, 90, 120 and Unlimited independently of quality. High-refresh targets are saved; actual frame delivery depends on the display, browser refresh scheduling, power mode and GPU workload.
+
+
+### Audio, rendering and ball contact revision
+
+Audio resumes on gameplay taps/keys and unmuting, supports the WebKit AudioContext name, and uses a louder compressed mix with procedural bass, kick and hi-hat. HD/HDR/Ultra disable adaptive downscaling when selected and lazily create reflection lighting, 2048 shadows and multisampled postprocessing. Smooth retains its low-memory path. Turf detail repeats separately from geometric field markings; car body panels use face normals to avoid shading streaks.
+
+Car-ball contact adds a single directional gameplay impulse on a new, approaching contact using pre-solver relative velocity, reduced vertical influence and a bounded speed curve. Reference: https://www.smish.dev/rocket_league/ball_simulation_3/ . This is an approximation layered over Rapier, not an exact reproduction of Psyonix physics; wheel hits, pinches and collision friction still differ. Ball speed remains capped. Kickoffs reset all team members. Automated checks cover shot direction/speed, team resets and an actual WebAudio signal during play.

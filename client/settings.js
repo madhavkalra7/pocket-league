@@ -1,11 +1,11 @@
 export const PRESETS={
  smooth:{label:'Smooth · integrated GPU',scale:.6,shadows:false,bloom:false,crowd:false},
  balanced:{label:'Balanced',scale:.85,shadows:false,bloom:false,crowd:true},
- hd:{label:'HD',scale:1,shadows:true,bloom:false,crowd:true},
- hdr:{label:'HDR',scale:1,shadows:true,bloom:true,crowd:true},
- ultra:{label:'Ultra',scale:1.25,shadows:true,bloom:true,crowd:true}
+ hd:{label:'HD',adaptive:false,scale:1,shadows:true,bloom:false,crowd:true},
+ hdr:{label:'HDR',adaptive:false,scale:1,shadows:true,bloom:true,crowd:true},
+ ultra:{label:'Ultra',adaptive:false,scale:1.25,shadows:true,bloom:true,crowd:true}
 };
-export const DEFAULTS={preset:'smooth',fps:60,scale:.6,shadows:false,bloom:false,crowd:false,adaptive:true,music:.25,effects:.7,showFPS:true,controlMode:'buttons',autoAccelerate:true,controlSize:1,controlOpacity:.85,tiltRange:30};
+export const DEFAULTS={preset:'smooth',fps:60,scale:.6,shadows:false,bloom:false,crowd:false,adaptive:true,music:.5,effects:.7,showFPS:true,controlMode:'buttons',autoAccelerate:true,controlSize:1,controlOpacity:.85,tiltRange:30};
 export function sanitizeSettings(raw={}){const x={...DEFAULTS,...raw};if(!['wheel','joystick','buttons','tilt'].includes(x.controlMode))x.controlMode='buttons';if(!PRESETS[x.preset])x.preset='smooth';x.fps=[0,30,45,60,90,120].includes(Number(x.fps))?Number(x.fps):60;for(const [k,a,b] of [['scale',.5,1.5],['music',0,1],['effects',0,1],['controlSize',.8,1.2],['controlOpacity',.4,1],['tiltRange',15,60]])x[k]=Math.max(a,Math.min(b,Number.isFinite(Number(x[k]))?Number(x[k]):DEFAULTS[k]));for(const k of ['shadows','bloom','crowd','adaptive','showFPS','autoAccelerate'])x[k]=x[k]===true;return x;}
 export function loadSettings(){try{return sanitizeSettings(JSON.parse(localStorage.getItem('pocket-settings-v3')||'{}'));}catch{return {...DEFAULTS};}}
 export function saveSettings(x){try{localStorage.setItem('pocket-settings-v3',JSON.stringify(x));}catch{}}
